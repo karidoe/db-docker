@@ -6,10 +6,8 @@ services:
     restart: always
     ports:
       - "3306:3306"
-    networks:
-      - mainapp-network
     volumes:
-      - ./database/mysql/data:/var/lib/mysql
+      - ./database/mysql/data:/var/lib/mysql:rw
     env_file:
       - db.env
   phpmyadmin:
@@ -19,8 +17,6 @@ services:
       - "8580:80"
     links:
       - db
-    networks:
-      - mainapp-network
     env_file: 
       - db.env
 
@@ -32,12 +28,8 @@ services:
       - db.env
     ports:
       - 27017:27017
-    expose: 
-      - 27017
-    networks:
-      - mainapp-network
     volumes:
-      - ./database/mongodb/data:/data/db
+      - ./database/mongodb/data:/data/db:rw
 
   mongo-express:
     container_name: mongo_client
@@ -45,10 +37,12 @@ services:
     restart: always
     ports:
       - 8081:8081
+    depends_on:
+      - mongo
+    links:
+      - mongo
     env_file: 
       - db.env
-    networks:
-      - mainapp-network
   redis:
     container_name: redis-server
     image: "redis:alpine"
@@ -58,8 +52,6 @@ services:
       - ./redis-data:/var/lib/redis
     environment: 
       - REDIS_REPLICATION_MODE=master
-    networks:
-      - mainapp-network
   member-service:
     build: 
       context: ./images/nodejs
@@ -73,8 +65,6 @@ services:
       NODE_ENV: development
     ports: 
       - 3001:3000
-    networks: 
-      - mainapp-network
 
   otp-service:
     build: 
@@ -89,8 +79,3 @@ services:
       NODE_ENV: development
     ports: 
       - 3002:3131
-    networks: 
-      - mainapp-network
-
-networks:
-  mainapp-network:
