@@ -4,3 +4,4 @@ mongo/data/*
 redis/data/*
 neo4j/*
 !/neo4j/.gitkeep
+apps/*

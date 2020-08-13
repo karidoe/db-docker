@@ -1,0 +1,7 @@
+FROM node:14.8.0-alpine
+WORKDIR '/app'
+
+COPY . .
+
+RUN npm i -f
+RUN npm install
