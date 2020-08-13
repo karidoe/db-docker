@@ -32,7 +32,7 @@ services:
       - db.env
     ports:
       - 27017:27017
-    expose:
+    expose: 
       - 27017
     networks:
       - mainapp-network
